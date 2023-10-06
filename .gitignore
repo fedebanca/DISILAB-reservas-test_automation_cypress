@@ -1,0 +1,13 @@
+# Ignore Cypress binary cache
+.cypress/
+
+# Ignore screenshots and videos generated during test runs
+cypress/screenshots/
+cypress/videos/
+
+# Ignore environment-specific configuration files (you may need to customize this)
+cypress/config/development.json
+cypress/config/production.json
+
+# Ignore generated coverage reports (if you're using code coverage)
+coverage/
