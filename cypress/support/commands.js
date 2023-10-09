@@ -61,8 +61,12 @@ Cypress.Commands.add('createBooking', (date, labName, careerName, subjectName, t
   cy.submitBookingForm(date, labName, careerName, subjectName, teacherName, period_id, userName)
 })
 
-Cypress.Commands.add('submitBookingForm', (date, labName, careerName, subjectName, teacherName, period_id, userName) => {
-  cy.get('#date').type(date.toLocaleDateString('en-GB'));
+Cypress.Commands.add('submitBookingForm', (date, labName, careerName, subjectName, teacherName, period_id, userName, formatDate = true) => {
+  if (formatDate){
+    cy.get('#date').clear().type(date.toLocaleDateString('en-GB'));
+  } else{
+    cy.get('#date').clear().type(date);
+  }
   cy.get('select[name=room_id]').select(labName);
   cy.get('#career_id').select(careerName);
   if (subjectName){
@@ -80,6 +84,10 @@ Cypress.Commands.add('bookingLogs', (date, labName, period_id) => {
   cy.log('date = ' + date)
   cy.log('labName = ' + labName)
   cy.log('period_id = ' + period_id)
+})
+
+Cypress.Commands.add('', (dayOfWeek) =>{
+
 })
 
 function clickBookingsTableButton(labName, period_id, buttonSelectorString){

@@ -7,7 +7,8 @@
     "test": "test",
     "cypress:open": "cypress open",
     "cypress:runAll": "cypress run",
-    "cypress:runCreacion": "cypress run --spec cypress/e2e/test_creacion_de_reservas.cy.js"
+    "cypress:runCreacion": "cypress run --spec cypress/e2e/test_creacion_de_reservas.cy.js",
+    "cypress:runEdition" : "cypress run --spec cypress/e2e/test_edicion_de_reservas.cy.js"
   },
   "keywords": [
     "cypress",
