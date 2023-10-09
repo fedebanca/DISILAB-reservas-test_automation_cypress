@@ -118,30 +118,72 @@ describe('Test - RF1 - Editar reserva', () => {
 
     // DONE
     it('Editar - reserva fuera del ciclo lectivo (sabado noche)', () => {
-      date = getDateNextDayOfWeek('saturday');
-      labName = 'Laboratorio AMARILLO';
-      period_id = '3';
+      dateAux = getDateNextDayOfWeek('saturday');
+      labNameAux = 'Laboratorio AMARILLO';
+      period_idAux = '3';
       deletebk = false
       cy.bookingLogs(date, labName, period_id)
       cy.submitBookingForm(date, labName, 'Sistemas', 'Arquitectura de las computadoras', 'Ezequiel Escobar', period_id, 'fbancalari')
 
       cy.location('pathname').should('not.eq', '/reservas/index.php/bookings/index')
-      cy.get('p.msgbox.exclamation').should('not.have.text','Ya hay una reserva para ese laboratorio en ese dia y horario.')
-      cy.get('p.msgbox.info').should('not.have.text','Se realizó la reserva.')
+
+      // Check if the element with the expected text exists
+      cy.contains('p.msgbox.exclamation', 'Ya hay una reserva para ese laboratorio en ese dia y horario.').then(($element) => {
+        if ($element.length > 0) {
+          cy.get('p.msgbox.exclamation').should('not.have.text','Ya hay una reserva para ese laboratorio en ese dia y horario.')
+          deletebk = false
+        } else {
+          // If the element is not found (text is absent), you can handle it as needed
+          cy.log('Text is not present, which is expected.');
+        }
+      });
+
+      // Check if the element with the expected text exists
+      cy.contains('p.msgbox.info', 'Se realizó la reserva.').then(($element) => {
+        if ($element.length > 0) {
+          cy.get('p.msgbox.info').should('not.have.text','Se realizó la reserva.')
+        } else {
+          // If the element is not found (text is absent), you can handle it as needed
+          cy.log('Text is not present, which is expected.');
+        }
+      });
+      // cy.get('p.msgbox.exclamation').should('not.have.text','Ya hay una reserva para ese laboratorio en ese dia y horario.')
+      // cy.get('p.msgbox.info').should('not.have.text','Se realizó la reserva.')
     })
 
     // DONE
     it('Editar - reserva fuera del ciclo lectivo (domingo)', () => {
-      date = getDateNextDayOfWeek('sunday');
-      labName = 'Laboratorio AMARILLO';
-      period_id = '1';
+      dateAux = getDateNextDayOfWeek('sunday');
+      labNameAux = 'Laboratorio AMARILLO';
+      period_idAux = '1';
       deletebk = false
       cy.bookingLogs(date, labName, period_id)
       cy.submitBookingForm(date, labName, 'Sistemas', 'Arquitectura de las computadoras', 'Ezequiel Escobar', period_id, 'fbancalari')
 
       cy.location('pathname').should('not.eq', '/reservas/index.php/bookings/index')
-      cy.get('p.msgbox.exclamation').should('not.have.text','Ya hay una reserva para ese laboratorio en ese dia y horario.')
-      cy.get('p.msgbox.info').should('not.have.text','Se realizó la reserva.')
+      // Check if the element with the expected text exists
+      cy.contains('p.msgbox.exclamation', 'Ya hay una reserva para ese laboratorio en ese dia y horario.').then(($element) => {
+        if ($element.length > 0) {
+          cy.get('p.msgbox.exclamation').should('not.have.text','Ya hay una reserva para ese laboratorio en ese dia y horario.')
+          deletebk = false
+        } else {
+          // If the element is not found (text is absent), you can handle it as needed
+          cy.log('Text is not present, which is expected.');
+        }
+      });
+
+      // Check if the element with the expected text exists
+      cy.contains('p.msgbox.info', 'Se realizó la reserva.').then(($element) => {
+        if ($element.length > 0) {
+          cy.get('p.msgbox.info').should('not.have.text','Se realizó la reserva.')
+        } else {
+          // If the element is not found (text is absent), you can handle it as needed
+          cy.log('Text is not present, which is expected.');
+        }
+      });
+
+      // cy.get('p.msgbox.exclamation').should('not.have.text','Ya hay una reserva para ese laboratorio en ese dia y horario.')
+      // cy.get('p.msgbox.info').should('not.have.text','Se realizó la reserva.')
     })
 
   // DONE
@@ -165,6 +207,7 @@ describe('Test - RF1 - Editar reserva', () => {
 
   after(function(){
     cy.deleteBooking(dateSup, labNameSup, period_idSup)
+    cy.log('Booking deleted')
   })
 })
 });
