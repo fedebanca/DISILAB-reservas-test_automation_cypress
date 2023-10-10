@@ -86,8 +86,43 @@ Cypress.Commands.add('bookingLogs', (date, labName, period_id) => {
   cy.log('period_id = ' + period_id)
 })
 
-Cypress.Commands.add('', (dayOfWeek) =>{
+Cypress.Commands.add('assertBookingExists', (date, labName, careerName, subjectName, teacherName, period_id, userName, bookingShouldExist, formatDate = true) =>{
+  cy.log("Date: " + date)
+  if (formatDate){
+    date = date.toLocaleDateString('en-GB');
+  }
+  cy.log("FormatedDate: " + date)
+  cy.visit('http://localhost/reservas/index.php/bookings?date='+date)
 
+  const rowNumber = labNameToTableRow(labName)
+  
+  cy.get('table[class=bookings] > tbody > tr')
+  .eq(rowNumber)
+  .find('td')
+  .eq(period_id)
+  .then(($td) => {
+    if ($td.find('div > div').length > 0){
+        cy.wrap($td)
+        .find('div > div')
+        .should(($divs) => {
+          if (bookingShouldExist){
+            const condition1 = $divs.eq(0).text() === userName
+            const condition2 = $divs.eq(1).attr('up-tooltip') === careerName + ' - ' + subjectName + ' - ' + teacherName
+            expect(condition1 && condition2).to.be.true;
+          } else {
+            const condition1 = !$divs.eq(0).text(userName)
+            const condition2 = !$divs.eq(1).attr('up-tooltip') === careerName + ' - ' + subjectName + ' - ' + teacherName
+            expect(condition1 || condition2).to.be.true;
+          }
+        })
+    } else {
+      if (bookingShouldExist){
+        cy.wrap($td).find('div > div').should('exist');
+      } else {
+        cy.wrap($td).find('div > div').should('not.exist');
+      }      
+    }
+  })
 })
 
 function clickBookingsTableButton(labName, period_id, buttonSelectorString){
