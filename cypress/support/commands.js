@@ -24,6 +24,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+const { formatToInvertedDate, period_idToText } = require('../utils/common');
+
 Cypress.Commands.add('login', (website, username, password) => {
   cy.visit(website)
   cy.get('#username').type(username);
@@ -32,7 +34,7 @@ Cypress.Commands.add('login', (website, username, password) => {
 })
 
 Cypress.Commands.add('deleteBooking', (date, labName, period_id) => {
-  const formattedDate = formatDate(date);
+  const formattedDate = formatToInvertedDate(date);
 
   cy.visit('http://localhost/reservas/index.php/bookings?date='+formattedDate)
 
@@ -45,11 +47,39 @@ Cypress.Commands.add('pressReservarButton', () => {
   clickBookingsTableButton('Laboratorio AMARILLO', '3', 'a')
 })
 
+Cypress.Commands.add('pressCopyToClipboardButton', (date, labName, period_id) => {
+  const formattedDate = formatToInvertedDate(date);
+  cy.visit('http://localhost/reservas/index.php/bookings?date='+formattedDate)
+
+  clickBookingsTableButton(labName, period_id, '.copyToClipboard')
+})
+
+Cypress.Commands.add('assertValuesCopiedToClipboard', (date, period_id, labName, careerName, subjectName, teacherName, userText) => {
+  if (!subjectName){
+    subjectName = '(Sin Asginar)'
+  }
+  if (!teacherName){
+    teacherName = '(Sin Asignar)'
+  }
+  // Retrieve the pasted text from the clipboard
+  cy.window()
+  .invoke('prompt', 'Paste here:')
+  .then((pastedText) => {
+    // Define an array of expected text extracts
+    const fields = ['• Fecha: ', '• Turno: ', '• Laboratorio: ', '• Carrera: ', '• Asignatura: ', '• Docente: ', '• Realizado Por: '];
+    const expectedValues = [formatToInvertedDate(date), period_idToText(period_id), labName, careerName, subjectName, teacherName, userText];
+
+    for (let i = 0; i < fields.length; i++) {
+      expect(pastedText).to.include(fields[i] + expectedValues[i]);
+    }
+  });
+})
+
 Cypress.Commands.add('createAndEditBooking', (date, labName, period_id) => {
   // Dummy booking
   cy.createBooking(date, labName, 'Sistemas', 'Arquitectura de las computadoras', 'Ezequiel Escobar', period_id, 'fbancalari')
 
-  const formattedDate = formatDate(date);
+  const formattedDate = formatToInvertedDate(date);
   cy.visit('http://localhost/reservas/index.php/bookings?date='+formattedDate)
 
   clickBookingsTableButton(labName, period_id, 'a[title="Edit this booking"]')  
@@ -61,8 +91,8 @@ Cypress.Commands.add('createBooking', (date, labName, careerName, subjectName, t
   cy.submitBookingForm(date, labName, careerName, subjectName, teacherName, period_id, userName)
 })
 
-Cypress.Commands.add('submitBookingForm', (date, labName, careerName, subjectName, teacherName, period_id, userName, formatDate = true) => {
-  if (formatDate){
+Cypress.Commands.add('submitBookingForm', (date, labName, careerName, subjectName, teacherName, period_id, userName, formatToInvertedDate = true) => {
+  if (formatToInvertedDate){
     cy.get('#date').clear().type(date.toLocaleDateString('en-GB'));
   } else{
     cy.get('#date').clear().type(date);
@@ -86,12 +116,17 @@ Cypress.Commands.add('bookingLogs', (date, labName, period_id) => {
   cy.log('period_id = ' + period_id)
 })
 
-Cypress.Commands.add('assertBookingExists', (date, labName, careerName, subjectName, teacherName, period_id, userName, bookingShouldExist, formatDate = true) =>{
-  cy.log("Date: " + date)
-  if (formatDate){
+Cypress.Commands.add('assertBookingExists', (date, labName, careerName, subjectName, teacherName, period_id, userName, bookingShouldExist, formatToInvertedDate = true) =>{
+  if (formatToInvertedDate){
     date = date.toLocaleDateString('en-GB');
   }
-  cy.log("FormatedDate: " + date)
+  var bookingShouldExistText 
+  if (bookingShouldExist) {
+    bookingShouldExistText = 'should'
+  } else {
+    bookingShouldExistText = 'should NOT'
+  }
+  cy.log('Assertion: The following booking ' + bookingShouldExistText + ':\ndate = ' + date + '\nlabName = ' + labName + '\ncareerName = ' + careerName + '\nsubjectName = ' + subjectName + '\nteacherName = ' + teacherName + '\nperiod_id = ' + period_id + '\nuserName = ' + userName)
   cy.visit('http://localhost/reservas/index.php/bookings?date='+date)
 
   const rowNumber = labNameToTableRow(labName)
@@ -133,20 +168,7 @@ function clickBookingsTableButton(labName, period_id, buttonSelectorString){
     .eq(period_id)
     .find(buttonSelectorString)
     .click();
-  }  
-
-function formatDate(date) {
-  if (!(date instanceof Date)) {
-    throw new Error('Input is not a Date object');
   }
-
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
-  const day = String(date.getDate()).padStart(2, '0');
-
-  const formattedDate = `${year}-${month}-${day}`;
-  return formattedDate;
-}
 
 function labNameToTableRow(labName){
   switch (labName) {
