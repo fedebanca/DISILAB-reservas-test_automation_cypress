@@ -111,46 +111,62 @@ Cypress.Commands.add('submitBookingForm', (date, labName, careerName, subjectNam
 })
 
 Cypress.Commands.add('bookingLogs', (date, labName, period_id) => {
+  cy.log('BOOKING LOGS')
   cy.log('date = ' + date)
   cy.log('labName = ' + labName)
   cy.log('period_id = ' + period_id)
 })
 
-Cypress.Commands.add('assertBookingExists', (date, labName, careerName, subjectName, teacherName, period_id, userName, bookingShouldExist, formatToInvertedDate = true) =>{
-  if (formatToInvertedDate){
-    date = date.toLocaleDateString('en-GB');
+Cypress.Commands.add('assertBookingExists', (date, labName, careerName, subjectName, teacherName, period_id, userName, bookingShouldExist, formatDate = true) =>{
+
+  if (formatDate){
+    date = formatToInvertedDate(date);
   }
-  var bookingShouldExistText 
+  var bookingShouldExistText
   if (bookingShouldExist) {
-    bookingShouldExistText = 'should'
-  } else {
-    bookingShouldExistText = 'should NOT'
+    bookingShouldExistText = 'SHOULD'
+  } else { 
+    bookingShouldExistText = 'SHOULD <NOT>'
   }
-  cy.log('Assertion: The following booking ' + bookingShouldExistText + ':\ndate = ' + date + '\nlabName = ' + labName + '\ncareerName = ' + careerName + '\nsubjectName = ' + subjectName + '\nteacherName = ' + teacherName + '\nperiod_id = ' + period_id + '\nuserName = ' + userName)
+  if (!subjectName){
+    subjectName = ""
+  }
+  if (!teacherName){
+    teacherName = ""
+  }
+  cy.log('ASSERTION: THE FOLLOWING BOOKING ' + bookingShouldExistText + ' EXIST:\ndate = ' + date + '\nlabName = ' + labName + '\ncareerName = ' + careerName + '\nsubjectName = ' + subjectName + '\nteacherName = ' + teacherName + '\nperiod_id = ' + period_id + '\nuserName = ' + userName)
+
   cy.visit('http://localhost/reservas/index.php/bookings?date='+date)
 
   const rowNumber = labNameToTableRow(labName)
-  
+
   cy.get('table[class=bookings] > tbody > tr')
   .eq(rowNumber)
   .find('td')
   .eq(period_id)
   .then(($td) => {
-    if ($td.find('div > div').length > 0){
-        cy.wrap($td)
-        .find('div > div')
-        .should(($divs) => {
-          if (bookingShouldExist){
-            const condition1 = $divs.eq(0).text() === userName
-            const condition2 = $divs.eq(1).attr('up-tooltip') === careerName + ' - ' + subjectName + ' - ' + teacherName
-            expect(condition1 && condition2).to.be.true;
-          } else {
-            const condition1 = !$divs.eq(0).text(userName)
-            const condition2 = !$divs.eq(1).attr('up-tooltip') === careerName + ' - ' + subjectName + ' - ' + teacherName
-            expect(condition1 || condition2).to.be.true;
-          }
-        })
-    } else {
+    if ($td.find('div > div').length > 0){ // Booking exists
+      cy.log("EXISTS")
+      cy.wrap($td)
+      .find('div > div')
+      .then(($divs) => {
+        let sameUserName = $divs.eq(0).text().includes(userName)
+        let sameBookingData
+        const upTooltipAttribute = $divs.eq(1).attr('up-tooltip');
+        if(upTooltipAttribute !== undefined){ // Check if the 'up-tooltip' attribute is present
+          sameBookingData = upTooltipAttribute === careerName + ' - ' + subjectName + ' - ' + teacherName
+        } else {
+          sameBookingData = $divs.eq(1).text().includes(careerName + ' - ' + subjectName + ' - ' + teacherName)
+        }
+        
+        if (bookingShouldExist){
+          expect(sameUserName && sameBookingData).to.be.true;
+        } else {
+          expect(sameUserName && sameBookingData).not.to.be.true;
+        }
+      })
+    } else { // Booking does NOT exist
+      cy.log("DOES NOT EXIST")
       if (bookingShouldExist){
         cy.wrap($td).find('div > div').should('exist');
       } else {
