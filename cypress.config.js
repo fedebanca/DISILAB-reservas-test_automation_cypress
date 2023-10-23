@@ -7,6 +7,7 @@ module.exports = defineConfig({
     },
     video: true,
     experimentalStudio: true,
-    scrollBehavior: "center"
+    scrollBehavior: "center",
+    defaultCommandTimeout: 1000
   },
 });
