@@ -20,7 +20,7 @@ describe('Test - RF1 - Editar reserva', () => {
     })
 
     // DONE
-    it.only('Eliminar - cancelar eliminación', () => {
+    it('Eliminar - cancelar eliminación', () => {
       bookingShouldExist = true
       cy.bookingLogs(date, labName, period_id)
       cy.deleteBooking(date, labName, period_id)
@@ -34,7 +34,7 @@ describe('Test - RF1 - Editar reserva', () => {
     })
 
     // DONE
-    it.only('Eliminar - cancelar eliminación de otro administrador', () => {
+    it('Eliminar - cancelar eliminación de otro administrador', () => {
       bookingShouldExist = true
       cy.login('http://localhost/reservas/index.php/login','fbancalari2','fbancalari2*')
       cy.bookingLogs(date, labName, period_id)
@@ -49,7 +49,7 @@ describe('Test - RF1 - Editar reserva', () => {
     })
 
     // DONE
-    it.only('Eliminar - reserva propia', () => {
+    it('Eliminar - reserva propia', () => {
       bookingShouldExist = false
       cy.bookingLogs(date, labName, period_id)
       cy.deleteBooking(date, labName, period_id)
@@ -64,7 +64,7 @@ describe('Test - RF1 - Editar reserva', () => {
     })
 
     // DONE
-    it.only('Eliminar - reserva de otro administrador', () => {
+    it('Eliminar - reserva de otro administrador', () => {
       bookingShouldExist = false
       cy.login('http://localhost/reservas/index.php/login','fbancalari2','fbancalari2*')
       cy.bookingLogs(date, labName, period_id)
