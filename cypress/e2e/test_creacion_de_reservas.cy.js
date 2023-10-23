@@ -5,7 +5,7 @@ describe('Test - RF1 - Crear reserva', () => {
   // Se hace la diferencia entre la creación de reservar utilizando el boton de reservas encontrado en la tabla dentro del link http://localhost/reservas/index.php/bookings/index debido a que tiene comportamiento distinto a que si se utiliza el formulario accedido directamente con el link http://localhost/reservas/index.php/bookings/book
   context('Test - Crear reserva correcta (Link)', () =>{    
 
-    var date, labName, period_id, shouldBeCreated
+    var date, labName, period_id, careerName, subjectName, teacherName, userName, shouldBeCreated
     // period_id values: 1-mañana; 2-tarde; 3-noche
 
     beforeEach(function(){
@@ -18,26 +18,38 @@ describe('Test - RF1 - Crear reserva', () => {
       date = new Date();
       labName = 'Laboratorio AMARILLO';
       period_id = '1';
+      careerName = 'Sistemas'
+      subjectName = 'Arquitectura de las computadoras'
+      teacherName = 'Ezequiel Escobar'
+      userName = 'fbancalari'
       shouldBeCreated = true
       cy.bookingLogs(date, labName, period_id)
-      cy.submitBookingForm(date, labName, 'Sistemas', 'Arquitectura de las computadoras', 'Ezequiel Escobar', period_id, 'fbancalari')
+      cy.submitBookingForm(date, labName, careerName, subjectName, teacherName, period_id, userName)
 
       cy.location('pathname').should('eq', '/reservas/index.php/bookings/index')
       cy.get('p.msgbox.info').should('have.text','Se realizó la reserva.')
+      // Assert booking exists in the bookings table
+      cy.assertBookingExists(date, labName, careerName, subjectName, teacherName, period_id, userName, true)
     })
 
     // DONE
     it('Crear - reserva correcta con fecha pasada', () => {
       date = new Date();
-      date.setDate(date.getDate() - 7)
+      date.setDate(date.getDate() - 4)
       labName = 'Laboratorio AMARILLO';
       period_id = '1';
+      careerName = 'Sistemas'
+      subjectName = 'Arquitectura de las computadoras'
+      teacherName = 'Ezequiel Escobar'
+      userName = 'fbancalari'
       shouldBeCreated = true
       cy.bookingLogs(date, labName, period_id)
-      cy.submitBookingForm(date, labName, 'Sistemas', 'Arquitectura de las computadoras', 'Ezequiel Escobar', period_id, 'fbancalari')
+      cy.submitBookingForm(date, labName, careerName, subjectName, teacherName, period_id, userName)
 
       cy.location('pathname').should('eq', '/reservas/index.php/bookings/index')
       cy.get('p.msgbox.info').should('have.text','Se realizó la reserva.')
+      // Assert booking exists in the bookings table
+      cy.assertBookingExists(date, labName, careerName, subjectName, teacherName, period_id, userName, true)
     })    
 
     // DONE
@@ -97,15 +109,23 @@ describe('Test - RF1 - Crear reserva', () => {
       date = new Date();
       labName = 'Laboratorio AMARILLO';
       period_id = '1';
+      careerName = 'Sistemas'
+      subjectName = 'Arquitectura de las computadoras'
+      teacherName = 'Ezequiel Escobar'
+      userName = 'fbancalari'
       shouldBeCreated = true
       cy.bookingLogs(date, labName, period_id)
-      cy.submitBookingForm(date, labName, 'Sistemas', 'Arquitectura de las computadoras', 'Ezequiel Escobar', period_id, 'fbancalari')
+      cy.submitBookingForm(date, labName, careerName, subjectName, teacherName, period_id, userName)
 
       cy.visit('http://localhost/reservas/index.php/bookings/book')
-      cy.submitBookingForm(date, labName, 'Sistemas', 'Paradigmas de Programacion', 'Juan Manuel Fernandez Dos Santos', period_id, 'fbancalari')
+      cy.submitBookingForm(date, labName, careerName, 'Paradigmas de Programacion', 'Juan Manuel Fernandez Dos Santos', period_id, userName)
 
       cy.location('pathname').should('eq', '/reservas/index.php/bookings/save')
       cy.get('p.msgbox.exclamation').should('have.text','Ya hay una reserva para ese laboratorio en ese dia y horario.')
+      // Assert first booking exists in the bookings table
+      cy.assertBookingExists(date, labName, careerName, subjectName, teacherName, period_id, userName, true)
+      // Assert second booking does not exist in the bookings table
+      cy.assertBookingExists(date, labName, careerName, 'Paradigmas de Programacion', 'Juan Manuel Fernandez Dos Santos', period_id, userName, false)
     })
 
     // DONE
@@ -113,12 +133,18 @@ describe('Test - RF1 - Crear reserva', () => {
       date = new Date();
       labName = 'Laboratorio AZUL';
       period_id = '2';
+      careerName = 'Quimica'
+      subjectName = null
+      teacherName = null
+      userName = 'fbancalari'
       shouldBeCreated = true
       cy.bookingLogs(date, labName, period_id)
-      cy.submitBookingForm(date, labName, 'Quimica', null, null, period_id, 'fbancalari')
+      cy.submitBookingForm(date, labName, careerName, subjectName, teacherName, period_id, userName)
 
       cy.location('pathname').should('eq', '/reservas/index.php/bookings/index')
       cy.get('p.msgbox.info').should('have.text','Se realizó la reserva.')
+      // Assert  booking exists in the bookings table
+      cy.assertBookingExists(date, labName, careerName, subjectName, teacherName, period_id, userName, true)
     })
 
     // DONE
@@ -126,12 +152,18 @@ describe('Test - RF1 - Crear reserva', () => {
       date = new Date();
       labName = 'Laboratorio AZUL';
       period_id = '3';
+      careerName = 'Sistemas'
+      subjectName = 'Gestion de Datos'
+      teacherName = null
+      userName = 'fbancalari'
       shouldBeCreated = true
       cy.bookingLogs(date, labName, period_id)
-      cy.submitBookingForm(date, labName, 'Sistemas', 'Gestion de Datos', null, period_id, 'fbancalari')
+      cy.submitBookingForm(date, labName, careerName, subjectName, teacherName, period_id, userName)
 
       cy.location('pathname').should('eq', '/reservas/index.php/bookings/index')
       cy.get('p.msgbox.info').should('have.text','Se realizó la reserva.')
+      // Assert  booking exists in the bookings table
+      cy.assertBookingExists(date, labName, careerName, subjectName, teacherName, period_id, userName, true)
     })
 
     // DONE
@@ -147,7 +179,6 @@ describe('Test - RF1 - Crear reserva', () => {
       cy.get('p.msgbox.exclamation').should('not.have.text','Ya hay una reserva para ese laboratorio en ese dia y horario.')
       cy.get('p.msgbox.info').should('not.have.text','Se realizó la reserva.')
     })
-
 
     // DONE
     it('Crear - reserva fuera del ciclo lectivo (domingo)', () => {
@@ -173,7 +204,7 @@ describe('Test - RF1 - Crear reserva', () => {
 
   context('Test - Crear reserva correcta (Boton <Reservar>)', () =>{    
 
-    var date, labName, period_id, shouldBeCreated
+    var date, labName, period_id, careerName, subjectName, teacherName, userName, shouldBeCreated
     // period_id values: 1-mañana; 2-tarde; 3-noche
 
     beforeEach(function(){
@@ -186,12 +217,18 @@ describe('Test - RF1 - Crear reserva', () => {
       date = new Date();
       labName = 'Laboratorio NARANJA';
       period_id = '1';
+      careerName = 'Sistemas'
+      subjectName = 'Arquitectura de las computadoras'
+      teacherName = 'Ezequiel Escobar'
+      userName = 'fbancalari'
       shouldBeCreated = true
       cy.bookingLogs(date, labName, period_id)
-      cy.submitBookingForm(date, labName, 'Sistemas', 'Arquitectura de las computadoras', 'Ezequiel Escobar', period_id, 'fbancalari')
+      cy.submitBookingForm(date, labName, careerName, subjectName, teacherName, period_id, userName)
 
       cy.location('pathname').should('eq', '/reservas/index.php/bookings/index')
       cy.get('p.msgbox.info').should('have.text','Se realizó la reserva.')
+      // Assert  booking exists in the bookings table
+      cy.assertBookingExists(date, labName, careerName, subjectName, teacherName, period_id, userName, true)
     })
 
     // DONE
@@ -200,12 +237,18 @@ describe('Test - RF1 - Crear reserva', () => {
       date.setDate(date.getDate() - 7)
       labName = 'Laboratorio AMARILLO';
       period_id = '1';
+      careerName = 'Sistemas'
+      subjectName = 'Arquitectura de las computadoras'
+      teacherName = 'Ezequiel Escobar'
+      userName = 'fbancalari'
       shouldBeCreated = true
       cy.bookingLogs(date, labName, period_id)
-      cy.submitBookingForm(date, labName, 'Sistemas', 'Arquitectura de las computadoras', 'Ezequiel Escobar', period_id, 'fbancalari')
+      cy.submitBookingForm(date, labName, careerName, subjectName, teacherName, period_id, userName)
 
       cy.location('pathname').should('eq', '/reservas/index.php/bookings/index')
       cy.get('p.msgbox.info').should('have.text','Se realizó la reserva.')
+      // Assert  booking exists in the bookings table
+      cy.assertBookingExists(date, labName, careerName, subjectName, teacherName, period_id, userName, true)
     })
 
     // DONE
@@ -265,15 +308,23 @@ describe('Test - RF1 - Crear reserva', () => {
       date = new Date();
       labName = 'Laboratorio AMARILLO';
       period_id = '1';
+      careerName = 'Sistemas'
+      subjectName = 'Arquitectura de las computadoras'
+      teacherName = 'Ezequiel Escobar'
+      userName = 'fbancalari'
       shouldBeCreated = true
       cy.bookingLogs(date, labName, period_id)
-      cy.submitBookingForm(date, labName, 'Sistemas', 'Arquitectura de las computadoras', 'Ezequiel Escobar', period_id, 'fbancalari')
+      cy.submitBookingForm(date, labName, careerName, subjectName, teacherName, period_id, userName)
 
       cy.pressReservarButton();
-      cy.submitBookingForm(date, labName, 'Sistemas', 'Paradigmas de Programacion', 'Juan Manuel Fernandez Dos Santos', period_id, 'fbancalari')
+      cy.submitBookingForm(date, labName, careerName, 'Paradigmas de Programacion', 'Juan Manuel Fernandez Dos Santos', period_id, userName)
 
       cy.location('pathname').should('eq', '/reservas/index.php/bookings/save')
       cy.get('p.msgbox.exclamation').should('have.text','Ya hay una reserva para ese laboratorio en ese dia y horario.')
+      // Assert first booking exists in the bookings table
+      cy.assertBookingExists(date, labName, careerName, subjectName, teacherName, period_id, userName, true)
+      // Assert second booking does not exist in the bookings table
+      cy.assertBookingExists(date, labName, careerName, 'Paradigmas de Programacion', 'Juan Manuel Fernandez Dos Santos', period_id, userName, false)
     })
 
     // DONE
@@ -281,12 +332,18 @@ describe('Test - RF1 - Crear reserva', () => {
       date = new Date();
       labName = 'Laboratorio ROJO';
       period_id = '2';
+      careerName = 'Quimica'
+      subjectName = null
+      teacherName = null
+      userName = 'fbancalari'
       shouldBeCreated = true
       cy.bookingLogs(date, labName, period_id)
-      cy.submitBookingForm(date, labName, 'Quimica', null, null, period_id, 'fbancalari')
+      cy.submitBookingForm(date, labName, careerName, subjectName, teacherName, period_id, userName)
 
       cy.location('pathname').should('eq', '/reservas/index.php/bookings/index')
       cy.get('p.msgbox.info').should('have.text','Se realizó la reserva.')
+      // Assert booking exists in the bookings table
+      cy.assertBookingExists(date, labName, careerName, subjectName, teacherName, period_id, userName, true)
     })
 
     // DONE
@@ -294,12 +351,18 @@ describe('Test - RF1 - Crear reserva', () => {
       date = new Date();
       labName = 'Laboratorio ROJO';
       period_id = '3';
+      careerName = 'Sistemas'
+      subjectName = 'Gestion de Datos'
+      teacherName = null
+      userName = 'fbancalari'
       shouldBeCreated = true
       cy.bookingLogs(date, labName, period_id)
-      cy.submitBookingForm(date, labName, 'Sistemas', 'Gestion de Datos', null, period_id, 'fbancalari')
+      cy.submitBookingForm(date, labName, careerName, subjectName, teacherName, period_id, userName)
 
       cy.location('pathname').should('eq', '/reservas/index.php/bookings/index')
       cy.get('p.msgbox.info').should('have.text','Se realizó la reserva.')
+      // Assert booking exists in the bookings table
+      cy.assertBookingExists(date, labName, careerName, subjectName, teacherName, period_id, userName, true)
     })
 
     // DONE
