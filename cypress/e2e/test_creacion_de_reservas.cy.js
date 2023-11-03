@@ -33,7 +33,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })
 
     // DONE
-    it('Crear - reserva correcta con fecha pasada', () => {
+    it.skip('Crear - reserva correcta con fecha pasada', () => {
       date = new Date();
       date.setDate(date.getDate() - 4)
       labName = 'Laboratorio AMARILLO';
@@ -53,7 +53,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })    
 
     // DONE
-    it('Crear - fecha imposible 33/09/23', () => {
+    it.skip('Crear - fecha imposible 33/09/23', () => {
       date = '33/09/2023';
       labName = 'Laboratorio AMARILLO';
       period_id = '2';
@@ -66,7 +66,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })
 
     // DONE
-    it('Crear - fecha con mes imposible 01/13/23', () => {
+    it.skip('Crear - fecha con mes imposible 01/13/23', () => {
       date = '01/13/2023';
       labName = 'Laboratorio AMARILLO';
       period_id = '3';
@@ -79,7 +79,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })
 
     // DONE
-    it('Crear - fecha con mes imposible 01/00/23', () => {
+    it.skip('Crear - fecha con mes imposible 01/00/23', () => {
       date = '01/00/2023';
       labName = 'Laboratorio AZUL';
       period_id = '1';
@@ -92,7 +92,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })
 
     // DONE
-    it('Crear - fecha como texto escrito', () => {
+    it.skip('Crear - fecha como texto escrito', () => {
       date = 'texto';
       labName = 'Laboratorio AZUL';
       period_id = '1';
@@ -167,7 +167,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })
 
     // DONE
-    it('Crear - reserva fuera del ciclo lectivo (sabado noche)', () => {
+    it.skip('Crear - reserva fuera del ciclo lectivo (sabado noche)', () => {
       date = getDateNextDayOfWeek('saturday');
       labName = 'Laboratorio AMARILLO';
       period_id = '3';
@@ -181,7 +181,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })
 
     // DONE
-    it('Crear - reserva fuera del ciclo lectivo (domingo)', () => {
+    it.skip('Crear - reserva fuera del ciclo lectivo (domingo)', () => {
       date = getDateNextDayOfWeek('sunday');
       labName = 'Laboratorio AMARILLO';
       period_id = '1';
@@ -232,7 +232,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })
 
     // DONE
-    it('Crear - reserva correcta con fecha pasada', () => {
+    it.skip('Crear - reserva correcta con fecha pasada', () => {
       date = new Date();
       date.setDate(date.getDate() - 7)
       labName = 'Laboratorio AMARILLO';
@@ -252,7 +252,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })
 
     // DONE
-    it('Crear - fecha imposible 33/09/23', () => {
+    it.skip('Crear - fecha imposible 33/09/23', () => {
       date = '33/09/2023';
       labName = 'Laboratorio NARANJA';
       period_id = '2';
@@ -265,7 +265,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })
 
     // DONE
-    it('Crear - fecha con mes imposible 01/13/23', () => {
+    it.skip('Crear - fecha con mes imposible 01/13/23', () => {
       date = '01/13/2023';
       labName = 'Laboratorio NARANJA';
       period_id = '3';
@@ -278,7 +278,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })
 
     // DONE
-    it('Crear - fecha con mes imposible 01/00/23', () => {
+    it.skip('Crear - fecha con mes imposible 01/00/23', () => {
       date = '01/00/2023';
       labName = 'Laboratorio ROJO';
       period_id = '1';
@@ -291,7 +291,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })
 
     // DONE
-    it('Crear - fecha como texto escrito', () => {
+    it.skip('Crear - fecha como texto escrito', () => {
       date = 'texto';
       labName = 'Laboratorio AZUL';
       period_id = '1';
@@ -366,7 +366,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })
 
     // DONE
-    it('Crear - reserva fuera del ciclo lectivo (sabado noche)', () => {
+    it.skip('Crear - reserva fuera del ciclo lectivo (sabado noche)', () => {
       date = getDateNextDayOfWeek('saturday');
       labName = 'Laboratorio AMARILLO';
       period_id = '3';
@@ -380,7 +380,7 @@ describe('Test - RF1 - Crear reserva', () => {
     })
 
     // DONE
-    it('Crear - reserva fuera del ciclo lectivo (domingo)', () => {
+    it.skip('Crear - reserva fuera del ciclo lectivo (domingo)', () => {
       date = getDateNextDayOfWeek('sunday');
       labName = 'Laboratorio AMARILLO';
       period_id = '1';

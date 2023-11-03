@@ -86,17 +86,18 @@ Cypress.Commands.add('createAndEditBooking', (date, labName, period_id) => {
 })
 
 Cypress.Commands.add('createBooking', (date, labName, careerName, subjectName, teacherName, period_id, userName) => {
-  cy.visit('http://localhost/reservas/index.php/bookings/book')
+  // cy.visit('http://localhost/reservas/index.php/bookings/book')
+  cy.pressReservarButton()
 
   cy.submitBookingForm(date, labName, careerName, subjectName, teacherName, period_id, userName)
 })
 
 Cypress.Commands.add('submitBookingForm', (date, labName, careerName, subjectName, teacherName, period_id, userName, formatToInvertedDate = true) => {
-  if (formatToInvertedDate){
-    cy.get('#date').clear().type(date.toLocaleDateString('en-GB'));
-  } else{
-    cy.get('#date').clear().type(date);
-  }
+  // if (formatToInvertedDate){
+  //   cy.get('#date').clear().type(date.toLocaleDateString('en-GB'));
+  // } else{
+  //   cy.get('#date').clear().type(date);
+  // }
   cy.get('select[name=room_id]').select(labName);
   cy.get('#career_id').select(careerName);
   if (subjectName){

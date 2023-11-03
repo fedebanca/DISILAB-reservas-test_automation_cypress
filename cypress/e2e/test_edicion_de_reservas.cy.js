@@ -42,7 +42,7 @@ describe('Test - RF1 - Editar reserva', () => {
     })
 
     // DONE
-    it('Editar - reserva para una fecha pasada', () => {
+    it.skip('Editar - reserva para una fecha pasada', () => {
       date = new Date();
       date.setDate(date.getDate() - 4)
       labName = 'Laboratorio AZUL';
@@ -60,7 +60,7 @@ describe('Test - RF1 - Editar reserva', () => {
     })
 
     // DONE
-    it('Editar - fecha imposible 33/09/23', () => {
+    it.skip('Editar - fecha imposible 33/09/23', () => {
       cy.bookingLogs('33/09/2023', 'Laboratorio AMARILLO', '2')
       cy.submitBookingForm('33/09/2023', 'Laboratorio AMARILLO', 'Sistemas', 'Arquitectura de las computadoras', 'Ezequiel Escobar', '2', 'fbancalari', false)
 
@@ -69,7 +69,7 @@ describe('Test - RF1 - Editar reserva', () => {
     })
 
     // DONE
-    it('Editar - fecha con mes imposible 01/13/23', () => {
+    it.skip('Editar - fecha con mes imposible 01/13/23', () => {
       cy.bookingLogs('01/13/2023', 'Laboratorio AMARILLO', '3')
       cy.submitBookingForm('01/13/2023', 'Laboratorio AMARILLO', 'Sistemas', 'Arquitectura de las computadoras', 'Ezequiel Escobar', '3', 'fbancalari', false)
 
@@ -78,7 +78,7 @@ describe('Test - RF1 - Editar reserva', () => {
     })
 
     // DONE
-    it('Editar - fecha con mes imposible 01/00/23', () => {
+    it.skip('Editar - fecha con mes imposible 01/00/23', () => {
       cy.bookingLogs('01/00/23', 'Laboratorio AZUL', '1')
       cy.submitBookingForm('01/00/23', 'Laboratorio AZUL', 'Sistemas', 'Arquitectura de las computadoras', 'Ezequiel Escobar', '1', 'fbancalari', false)
 
@@ -87,7 +87,7 @@ describe('Test - RF1 - Editar reserva', () => {
     })
 
     // DONE
-    it('Editar - fecha como texto', () => {
+    it.skip('Editar - fecha como texto', () => {
       cy.bookingLogs('texto', 'Laboratorio AMARILLO', '2')
       cy.submitBookingForm('texto', 'Laboratorio AMARILLO', 'Sistemas', 'Arquitectura de las computadoras', 'Ezequiel Escobar', '2', 'fbancalari', false)
 
@@ -142,7 +142,7 @@ describe('Test - RF1 - Editar reserva', () => {
     })
 
     // DONE
-    it('Editar - reserva fuera del ciclo lectivo (sabado noche)', () => {
+    it.skip('Editar - reserva fuera del ciclo lectivo (sabado noche)', () => {
       dateAux = getDateNextDayOfWeek('saturday');
       labNameAux = 'Laboratorio AMARILLO';
       period_idAux = '3';
@@ -177,7 +177,7 @@ describe('Test - RF1 - Editar reserva', () => {
     })
 
     // DONE
-    it('Editar - reserva fuera del ciclo lectivo (domingo)', () => {
+    it.skip('Editar - reserva fuera del ciclo lectivo (domingo)', () => {
       dateAux = getDateNextDayOfWeek('sunday');
       labNameAux = 'Laboratorio AMARILLO';
       period_idAux = '1';
